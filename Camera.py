@@ -14,6 +14,7 @@ class Camera:
         self.ready, self.repeat = False, False
         self.th = Thread()
         self.width, self.height, self.fps = 2, 2, 1
+        
         self.th1 = Thread(target=self.startcam, 
                          args=(source, ), 
                          kwargs={'width':width, 'height':height, 'fps':fps})
@@ -26,7 +27,7 @@ class Camera:
         
         return
     
-    def startcam(source, width=None, height=None, fps=None):
+    def startcam(self, source, width=None, height=None, fps=None):
         self.source = source
         self.repeat = True
         while self.repeat:
