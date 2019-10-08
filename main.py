@@ -4,7 +4,8 @@
 @author: troyc
 """
 from flask import Flask, render_template, Response
-from cam import VidCam
+import Camfunc
+from Camera import Camera
 import time
 
 app = Flask(__name__)
@@ -17,14 +18,16 @@ def gen(cam):
     fps = cam.fps
     waittime = round(1/fps,3)
     while True:
-        frame = cam.get_frame()
+        ret, frame = cam.getframe()
+        pack = Camfunc.encodeFrame(frame)
         time.sleep(waittime)
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+        yield (pack)
 
 @app.route('/video_feed')
 def video_feed():
-    return Response(gen(VidCam(0)),mimetype='multipart/x-mixed-replace; boundary=frame')
+    addr = 0
+    return Response(gen(Camera(addr),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 if __name__ == "__main__":

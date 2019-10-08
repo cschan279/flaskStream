@@ -13,7 +13,7 @@ class Camera:
         
         self.ready, self.repeat = False, False
         self.th = Thread()
-        self.width, self.height, self.fps = 2, 2, 1
+        self.width, self.height, self.fps = 20, 20, 1
         
         self.th1 = Thread(target=self.startcam, 
                          args=(source, ), 
@@ -33,6 +33,7 @@ class Camera:
         while self.repeat:
             self.camera = cv2.VideoCapture(source)
             if self.checkcam():
+                self.setcam(width=width, height=height, fps=fps)
                 break
             else:
                 print('Failed to connect with source-{}'.format(source))
@@ -55,17 +56,12 @@ class Camera:
     def getframe(self):
         return self.ret, self.frame
     
-    def getencode(self):
-        r, f = self.ret, self.frame.copy()
-        cf = cv2.imencode('.jpg', f)
-        return r, cf.tobytes()
         
     def emptyframe(self):
         return np.zeros((self.width,self.height,3),np.uint8)
         
     def checkcam(self):
         if self.camera.isOpened():
-            self.setcam(width=width, height=height, fps=fps)
             self.ready = True
             return True
         else:
