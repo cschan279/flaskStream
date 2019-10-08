@@ -20,13 +20,13 @@ def gen(cam):
     while True:
         ret, frame = cam.getframe()
         pack = Camfunc.encodeFrame(frame)
-        time.sleep(waittime)
+        time.sleep(1/cam.fps)
         yield (pack)
 
 @app.route('/video_feed')
 def video_feed():
-    addr = 0
-    return Response(gen(Camera(addr),
+    addr = 'rtsp://admin:cepa5566@192.168.1.11'
+    return Response(gen(Camera(addr)),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 

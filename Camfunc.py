@@ -9,7 +9,7 @@ import cv2
 
 
 def encodeFrame(img):
-    codeframe = cv2.imencode('.jpg', img)
+    r, codeframe = cv2.imencode('.jpg', img)
     bytesframe = codeframe.tobytes()
     head = b'--frame\r\nContent-Type: image/jpeg\r\n\r\n'
     tail = b'\r\n\r\n'

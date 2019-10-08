@@ -37,18 +37,21 @@ class Camera:
                 break
             else:
                 print('Failed to connect with source-{}'.format(source))
-        self.repeat = False
         return 
     
     def loopread(self):
         self.repeat = True
+        count=0
         while self.repeat:
             if self.ready:
                 r, f = self.camera.read()
                 if r:
                     self.ret, self.frame = True, f.copy()
                 else:
+                    print('#', self.width,self.height)
                     self.ret, self.frame = False, self.emptyframe()
+                    self.restartCam()
+                    time.sleep(1)
             else:
                 time.sleep(1)
         return
@@ -56,6 +59,16 @@ class Camera:
     def getframe(self):
         return self.ret, self.frame
     
+    def restartCam(self):
+        if not self.th1.isAlive():
+            self.camera.release()
+            self.th1 = Thread(target=self.startcam, 
+                         args=(self.source, ), 
+                         kwargs={'width':self.width, 'height':self.height, 'fps':self.fps})
+            self.th1.start()
+        else:
+            print('pending to start the camera')
+        return
         
     def emptyframe(self):
         return np.zeros((self.width,self.height,3),np.uint8)
@@ -69,14 +82,14 @@ class Camera:
             self.camera.release()
             return False
     
-    def setcam(width=None, height=None, fps=None):
+    def setcam(self, width=None, height=None, fps=None):
         if width:
             self.camera.set(3, width)
-        self.width = self.camera.get(3)
+        self.width = int(self.camera.get(3))
         
         if height:
             self.camera.set(4, height)
-        self.height = self.camera.get(4)
+        self.height = int(self.camera.get(4))
         
         if fps:
             self.camera.set(5, fps)
