@@ -3,10 +3,14 @@
 """
 @author: troyc
 """
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, request, jsonify
+import time
+import cv2
+import numpy as np
+import json
 import Camfunc
 from Camera import Camera
-import time
+
 
 app = Flask(__name__)
 
@@ -28,6 +32,16 @@ def video_feed():
     addr = 'rtsp://admin:cepa5566@192.168.1.11'
     return Response(gen(Camera(addr)),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/receiveImg', methods=['POST'])
+def receiveImg():
+    r = request
+    nparr = np.fromstring(r.data, np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    time.sleep(1)
+    response = {'size':list(img.shape)}
+    return jsonify(response)
+
 
 
 if __name__ == "__main__":
