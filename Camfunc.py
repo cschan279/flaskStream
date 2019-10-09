@@ -4,9 +4,9 @@
 @author: troyc
 """
 import cv2
-import signal
 import time
-from contextlib import contextmanager
+
+from func_timeout import func_timeout, FunctionTimedOut
 
 
 
@@ -19,33 +19,15 @@ def encodeFrame(img):
     return package
 
 
-@contextmanager
-def timeout(t=0.5):
-    signal.signal(signal.SIGALRM, raise_timeout)
-    signal.alarm(t)
-    
+
+def timeoutCam(cam, t=1):
+    r, f = False, None
     try:
-        yield
-    except TimeoutError:
-        pass
-    finally:
-        signal.signal(signal.SIGALRM, signal.SIG_IGN)
+        r, f = func_timeout(1, cam.read)
+        return r, f
+    except:
+        return False, None
         
-def raise_timeout(signum, frame):
-    raise TimeoutError
 
-'''
-def testfunc(t):
-    x = time.time()
-    while time.time()-x < t:
-        print('.', end='')
-        time.sleep(0.2)
-    return True
-
-def trialfunc(t):
-    x = 0
-    with timeout(t=t):
-        x = testfunc(2)
-    return x
 '''
 
