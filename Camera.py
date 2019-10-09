@@ -44,7 +44,9 @@ class Camera:
         count=0
         while self.repeat:
             if self.ready:
-                r, f = self.camera.read()
+                r, f = False, self.emptyframe()
+                with Camfunc.timeout(t=1):
+                    r, f = self.camera.read()
                 if r:
                     self.ret, self.frame = True, f.copy()
                 else:
