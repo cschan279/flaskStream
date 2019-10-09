@@ -29,5 +29,4 @@ def timeoutCam(cam, t=1):
         return False, None
         
 
-'''
 

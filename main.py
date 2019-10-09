@@ -25,7 +25,9 @@ def gen(cam):
         ret, frame = cam.getframe()
         pack = Camfunc.encodeFrame(frame)
         time.sleep(1/cam.fps)
+        print('yield')
         yield (pack)
+    print('generator stop')
 
 @app.route('/video_feed')
 def video_feed():
@@ -46,3 +48,4 @@ def receiveImg():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
+    print('exit')

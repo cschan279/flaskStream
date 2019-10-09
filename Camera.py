@@ -31,6 +31,7 @@ class Camera:
     def startcam(self, source, width=None, height=None, fps=None):
         self.source = source
         self.repeat = True
+        self.ready=False
         while self.repeat:
             self.camera = cv2.VideoCapture(source)
             if self.checkcam():
@@ -38,6 +39,7 @@ class Camera:
                 break
             else:
                 print('Failed to connect with source-{}'.format(source))
+        self.ready=True
         return 
     
     def loopread(self):
@@ -48,6 +50,7 @@ class Camera:
                 r, f = Camfunc.timeoutCam(self.camera, t=1)
                 #r, f = self.camera.read()
                 if r:
+                    print('ret=True')
                     self.ret, self.frame = True, f.copy()
                 else:
                     print('#', self.width,self.height)
@@ -55,7 +58,10 @@ class Camera:
                     self.restartCam()
                     time.sleep(1)
             else:
+                print('try starting cam +', self.repeat, '+ ', self.ready)
+                
                 time.sleep(1)
+        print('self.loop end')
         return
         
     def getframe(self):
