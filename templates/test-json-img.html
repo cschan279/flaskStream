@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <title>Test json Img</title>
+  </head>
+  <body>
+    <h1>Test json Img</h1>
+    <img id="bg" width="80%" height="auto">
+  </body>
+  
+  <script>
+        var xmlhttp = new XMLHttpRequest();
+        var url = "jsonImg/";
+
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var myArr = JSON.parse(this.responseText);
+                myFunction(myArr);
+            }
+        };
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+
+        function myFunction(arr) {
+            var image = document.getElementById('bg');
+            image.setAttribute('src', arr['image']);
+        }
+  </script>
+</html>
