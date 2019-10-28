@@ -8,21 +8,25 @@
   </body>
   
   <script>
-        var xmlhttp = new XMLHttpRequest();
-        var url = "jsonImg/";
-
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                var myArr = JSON.parse(this.responseText);
-                myFunction(myArr);
-            }
-        };
-        xmlhttp.open("GET", url, true);
-        xmlhttp.send();
-
         function myFunction(arr) {
             var image = document.getElementById('bg');
-            image.setAttribute('src', arr['image']);
+            dat=arr['image'];
+            console.log(dat);
+            data = "data:image/png;base64,"+dat
+            image.setAttribute('src', data);
         }
+        var request = new XMLHttpRequest();
+        var url = "jsonImg/";
+        
+        
+        request.open("GET", url);
+        request.responseType = 'json';
+        request.send();
+        request.onload = function() {
+            var x = request.response;
+            myFunction(x);
+        }
+
+        
   </script>
 </html>

@@ -4,10 +4,11 @@ from flask import Flask, render_template, Response, request, jsonify
 import json
 import base64
 import cv2
+import pickle
 import numpy as np
 
-cv_img = np.zeros((800,600,3),np.uint8)
-im_size = [800,600]
+cv_img = np.zeros((600,800,3),np.uint8)
+im_size = [600,800]
 coor = [0,0]
 r_size = 50,50
 
@@ -28,9 +29,9 @@ def draw_new_img():
     coor[1] = coor[1]+ im_size[1]//100
     
     if coor[0] >= im_size[0]:
-        coor[0] = coor[0] - imsize[0]
+        coor[0] = coor[0] - im_size[0]
     if coor[1] >= im_size[1]:
-        coor[0] = coor[1] - imsize[1]
+        coor[0] = coor[1] - im_size[1]
     
     return cv_img
     
@@ -43,8 +44,14 @@ def index():
 def jsonImg():
     global cv_img, coor
     print('jsonImg')
-    jstr = json.dumps({"image": base64.b64encode(draw_new_img()).decode('ascii')})
-    #print(jstr)
+    cv_img = draw_new_img()
+    _, data_img = cv2.imencode('.JPG',cv_img)
+    try:
+        b_img = base64.b64encode(data_img).decode('ascii')
+    except Exception as e:
+        print(e)
+    jstr = json.dumps({"image": b_img})
+    print('Hello')
     return jstr
 
 if __name__ == "__main__":
