@@ -6,18 +6,20 @@ serve:
 '''
 Camera.py --> main.py
 '''
-view
+view:
 '''
 templates/index.html
 main.py --> @app.route('/')
 '''
+hoping to be able to resume the camera without restart or interrupt the program
+the camera.read() just hold for a long period without return a (False,None)
 
-## Include cv image in json (python)
+## Include cv image in json (python)✓
 '''
 imgJson-test.py
 '''
 
-## Extract and display image from json (js)
+## Extract and display image from json (js)✓
 '''
 templates/test-json-img.html
 imgJson-test.py --> @app.route('/')
